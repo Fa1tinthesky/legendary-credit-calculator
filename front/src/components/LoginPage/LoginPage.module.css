@@ -1,5 +1,11 @@
 .main {
+    display: flex;
+    justify-content: center;
     align-items: center;
+    background-image: url('../../assets/white-bg-image.png');
+    min-height: 100vh;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
 }
 
 .card {

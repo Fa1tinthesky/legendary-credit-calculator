@@ -5,6 +5,5 @@ export default function login({ mail, password }) {
         body: JSON.stringify({ Mail: mail, Password: password }),
     }).then((resp) => {
         console.log(resp);
-        
     })
 }

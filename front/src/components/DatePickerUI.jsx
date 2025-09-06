@@ -3,20 +3,20 @@ import { Stack, TextField } from "@mui/material";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 function formatDate(date) {
     return date.toLocaleDateString('en-CA');
 };
 
-export default function DatePickerUI() {
+export default function DatePickerUI({ changeBody }) {
     const today = dayjs();
-    const [selectedDate, setSelectedDate] = useState();
-    
-    if (selectedDate) {
-        console.log(formatDate(selectedDate["$d"]));
-    }
+    const [selectedDate, setSelectedDate] = useState(today);
+
+    useEffect(() => {
+        changeBody("date", formatDate(selectedDate["$d"]));
+    }, [formatDate(selectedDate["$d"])])
     
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>

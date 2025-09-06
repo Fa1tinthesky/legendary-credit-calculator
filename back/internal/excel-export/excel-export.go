@@ -1,9 +1,10 @@
-package calculation
+package excel_export
 
 import (
 	"encoding/json"
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/calculation/entities"
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/pkg/calculator"
+	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/pkg/excel"
 	"net/http"
 )
 
@@ -22,7 +23,7 @@ type CalculationResponse struct {
 	Sum     float64                    `json:"sum"`
 }
 
-func CalculateHandler(w http.ResponseWriter, r *http.Request) {
+func GetExcelHandler(w http.ResponseWriter, r *http.Request) {
 	var calcRequest *CalculationRequest
 	var calcResponse CalculationResponse
 
@@ -30,12 +31,11 @@ func CalculateHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
 	}
 
 	creditCalc := calculator.NewCreditCalculator()
 
-	calcResponse.Table, calcResponse.Monthly, calcResponse.Sum = creditCalc.Calculate(
+	calcResponse.Table, _, _ = creditCalc.Calculate(
 		calcRequest.Sum,
 		calcRequest.Period,
 		calcRequest.Rate,
@@ -43,9 +43,14 @@ func CalculateHandler(w http.ResponseWriter, r *http.Request) {
 		calcRequest.StartDate,
 	)
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(calcResponse); err != nil {
+	fileBytes, err := excel.ExportToExcel(calcResponse.Table, "График выплат")
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Disposition", "attachment; filename=payments.xlsx")
+	w.Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	w.Write(fileBytes)
 }

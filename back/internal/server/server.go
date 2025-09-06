@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/calculation"
+	excel_export "github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/excel-export"
 	"github.com/go-chi/chi/v5"
 	"github.com/rs/cors"
 	"log"
@@ -22,6 +23,7 @@ func (s *Server) Run() {
 	r := chi.NewRouter()
 
 	r.Post("/api/calculate", calculation.CalculateHandler)
+	r.Get("/api/get-excel", excel_export.GetExcelHandler)
 
 	corsHandler := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},

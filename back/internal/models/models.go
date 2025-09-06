@@ -38,3 +38,15 @@ type Table_unit struct {
 	Amount float64   `json:"amount"`
 	Data   time.Time `json:"data"`
 }
+
+type CalculationTable struct {
+	ID          uint      `json:"id" db:"id"`
+	UserID      int       `json:"user_mail" db:"user_mail"`
+	Name        string    `json:"name" db:"name"`
+	Sum         float64   `json:"sum" db:"sum"`
+	Currency    int       `json:"currency" db:"currency"`
+	Period      int       `json:"period" db:"period"`
+	Rate        float64   `json:"rate" db:"rate"`
+	PaymentType string    `json:"payment_type" db:"payment_type"`
+	StartDate   time.Time `json:"start_date" db:"start_date"`
+}

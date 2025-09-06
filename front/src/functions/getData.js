@@ -1,5 +1,6 @@
-export default function getData(setData, setIsLoading, body) {
+export default function getData({setData, setIsLoading, setShowTable, body}) {
     setIsLoading(true);
+    setShowTable(true);
     fetch("http://10.192.9.134:8080/api/calculate", {
         method: "post",
         headers: { "Content-Type": "application/json" },

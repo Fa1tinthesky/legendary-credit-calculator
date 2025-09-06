@@ -52,7 +52,9 @@ export default function TableComponent({ table, currency }) {
                 <TableBody>
                     {table.map((row, index) => (
                         <TableRow
+                            hover={true}
                             sx={{
+                                transition: ".2s",
                                 "&:last-child td, &:last-child th": {
                                     border: 0,
                                 },

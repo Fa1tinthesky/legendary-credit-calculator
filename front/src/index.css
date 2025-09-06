@@ -10,7 +10,7 @@ main {
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
-    background: url("./assets/bg-image.png");
+    background: url("./assets/white-bg-image.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
 }

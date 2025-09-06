@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ContentComponent from "./components/ContentComponent/ContentComponent";
 import { useEffect, useState } from "react";
 import getData from "./functions/getData";
+import LoginPage from "./components/LoginPage/LoginPage";
+import login from "./functions/login";
 
 function App() {
     const [isLoading, setIsLoading] = useState(true);
@@ -16,6 +18,8 @@ function App() {
             type: 1,
             start_date: "2025-09-03",
         });
+
+        login({ mail: "farskurinyjesin@gmail.com", password: "123" });
     }, []);
 
     return (
@@ -26,16 +30,13 @@ function App() {
                     element={
                         <main>
                             {!isLoading && (
-                                <ContentComponent
-                                    // percentage={17}
-                                    // table={table}
-                                    currency={"$"}
-                                    data={data}
-                                ></ContentComponent>
+                                <ContentComponent data={data} currency={"$"} />
                             )}
                         </main>
                     }
                 ></Route>
+                <Route path="/login" element={<LoginPage></LoginPage>}></Route>
+
                 <Route path="*" element={<h1>404. Not found</h1>}></Route>
             </Routes>
         </Router>

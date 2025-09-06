@@ -1,15 +1,22 @@
-export default function getData({setData, setIsLoading, setShowTable, body}) {
+export default function getData({ setData, setIsLoading, setShowTable, body }) {
     setIsLoading(true);
     setShowTable(true);
-    fetch("http://10.192.9.134:8080/api/calculate", {
+
+    console.log(body);
+    
+
+    fetch("https://96bea0cf695fd5.lhr.life/api/calculate", {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
     })
         .then((resp) => {
+            console.log(resp, body);
             return resp.json();
         })
         .then((response) => {
+            console.log(response);
+            
             let newResponse = {
                 ...response,
                 table: response.table.map((item) => {

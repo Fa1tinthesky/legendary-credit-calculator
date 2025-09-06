@@ -81,36 +81,3 @@ export default function TableComponent({ table, currency }) {
         </TableContainer>
     );
 }
-
-/*<TableComponent
-                            table={[
-                                {
-                                    date: "Март, 2025",
-                                    sum: 14977.23,
-                                    main_debt: 10477.23,
-                                    percent: 4500.0,
-                                    remain: 289522.77,
-                                },
-                                {
-                                    date: "Март, 2025",
-                                    sum: 14977.23,
-                                    main_debt: 10477.23,
-                                    percent: 4500.0,
-                                    remain: 289522.77,
-                                },
-                                {
-                                    date: "Март, 2025",
-                                    sum: 14977.23,
-                                    main_debt: 10477.23,
-                                    percent: 4500.0,
-                                    remain: 289522.77,
-                                },
-                                {
-                                    date: "Март, 2025",
-                                    sum: 14977.23,
-                                    main_debt: 10477.23,
-                                    percent: 4500.0,
-                                    remain: 289522.77,
-                                },
-                            ]}
-                        /> */

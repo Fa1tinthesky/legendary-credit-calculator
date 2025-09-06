@@ -1,12 +1,14 @@
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import classes from "./MyPieChart.module.css";
 import "./MyPieChart.css";
+import { useEffect, useState } from "react";
 
 export default function MyPieChart({ percentage }) {
     const data = [
         { name: "Основной долг", value: 100 - percentage },
         { name: "Проценты", value: percentage },
     ];
+    const [isFirstTime, setIsFirstTime] = useState(true);
 
     const RADIAN = Math.PI / 180;
     const COLORS = ["#faffe4c8", "#dfa1cbc0"];
@@ -36,6 +38,14 @@ export default function MyPieChart({ percentage }) {
         );
     };
 
+    const animationDuration = 2000;
+
+    useEffect(() => {
+        setTimeout(() => {
+            setIsFirstTime(false);
+        }, animationDuration + 300)
+    }, []);
+
     return (
         <ResponsiveContainer width="40%" height="100%">
             <PieChart width={400} height={400}>
@@ -45,6 +55,8 @@ export default function MyPieChart({ percentage }) {
                     innerRadius={0}
                     outerRadius={120}
                     labelLine={false}
+                    animationDuration={animationDuration}
+                    isAnimationActive={isFirstTime}
                     label={renderCustomizedLabel}
                     className={classes.pie}
                 >

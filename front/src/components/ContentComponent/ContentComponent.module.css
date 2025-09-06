@@ -3,13 +3,13 @@
     border-radius: 16px;
     max-width: 1200px;
     width: 100%;
-    margin: 0 auto;
+    margin: 10px auto;
+    padding: 10px;
 }
 
 .charts {
     height: 500px;
     box-sizing: border-box;
-    margin: 10px;
     display: flex;
 }
 

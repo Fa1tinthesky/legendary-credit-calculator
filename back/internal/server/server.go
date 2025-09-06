@@ -2,7 +2,8 @@ package server
 
 import (
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/calculation"
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi/v5"
+	"github.com/rs/cors"
 	"log"
 	"net/http"
 )
@@ -18,12 +19,20 @@ func NewServer(port string) *Server {
 }
 
 func (s *Server) Run() {
-	r := mux.NewRouter()
+	r := chi.NewRouter()
 
-	r.HandleFunc("/api/calculate", calculation.CalculateHandler).Methods(http.MethodPost)
+	r.Post("/api/calculate", calculation.CalculateHandler)
+
+	corsHandler := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders: []string{"Content-Type", "Authorization"},
+	})
+
+	handler := corsHandler.Handler(r)
 
 	log.Println("Starting server on port " + s.Port)
-	if err := http.ListenAndServe(":"+s.Port, r); err != nil {
+	if err := http.ListenAndServe(":"+s.Port, handler); err != nil {
 		log.Fatal(err)
 	}
 }

@@ -3,12 +3,13 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
+
 import Stack from '@mui/material/Stack';
+import DatePickerUI from './DatePickerUI';
 import Button from '@mui/material/Button';
 import { TextField, FormControl, InputLabel, OutlinedInput, InputAdornment, Slider, MenuItem, Container, Box, Grid} from '@mui/material';
 import { createTheme, alpha, getContrastRatio, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const blueBase = "#7F00FF";
 const blueMain = alpha(blueBase, 0.7);
@@ -111,6 +112,7 @@ export default function HomePage() {
         },
     ]
 
+
     const handleCurrencieChange = (event) => {
         const chosen = currencies.filter(item => item.value === event.target.value);
         console.log(chosen);
@@ -172,13 +174,14 @@ export default function HomePage() {
                         options={money_terms}
                     ></FormOption>
                 </Grid>
-                <Grid size={6}>
+                <Grid size={3}>
                     <TextField
                         fullWidth
                         id="outlined-select-currency"
                         select
                         label={"Тип кредита"}
                         defaultValue={"аннуитет"}
+                        color="blue"
                     >
                       {debt_types.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
@@ -187,10 +190,9 @@ export default function HomePage() {
                       ))}
                     </TextField>
                 </Grid>
-                <Grid size={6}>
-                    
-                </Grid>
-        
+                <Grid size={3}>
+                    <DatePickerUI color="blue"></DatePickerUI>
+                </Grid>  
                 <Grid size={12}>
                     ‌<Button fullWidth size="large" variant="contained" color="blue" sx={{marginTop: 1, borderRadius: 0}}>Рассчитать</Button>
                 </Grid>

@@ -10,15 +10,17 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import numberWithCommas from "../../functions/numberWithCommas";
 
-export default function TableComponent({ table }) {
+export default function TableComponent({ table, currency }) {
     const headerStyle = {
         fontWeight: "bold",
-        color: "white",
+        color: "black",
         borderColor: "#ffffff20",
+        fontSize: "17px",
     };
     const elementStyle = {
-        color: "#f1f1f1ff",
+        color: "#2f2f2fff",
         borderColor: "#ffffff20",
+        fontSize: "17px",
     };
 
     return (
@@ -59,16 +61,16 @@ export default function TableComponent({ table }) {
                         >
                             <TableCell sx={elementStyle}>{row.date}</TableCell>
                             <TableCell align="right" sx={elementStyle}>
-                                {numberWithCommas(row.sum)}
+                                {numberWithCommas(row.payment, currency)}
                             </TableCell>
                             <TableCell align="right" sx={elementStyle}>
-                                {numberWithCommas(row.main_debt)}
+                                {numberWithCommas(row.body, currency)}
                             </TableCell>
                             <TableCell align="right" sx={elementStyle}>
-                                {numberWithCommas(row.percent)}
+                                {numberWithCommas(row.interest, currency)}
                             </TableCell>
                             <TableCell align="right" sx={elementStyle}>
-                                {numberWithCommas(row.remain)}
+                                {numberWithCommas(row.remainder, currency)}
                             </TableCell>
                         </TableRow>
                     ))}

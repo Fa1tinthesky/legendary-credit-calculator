@@ -10,6 +10,8 @@ import Button from '@mui/material/Button';
 import { TextField, FormControl, InputLabel, OutlinedInput, InputAdornment, Slider, MenuItem, Container, Box, Grid} from '@mui/material';
 import { createTheme, alpha, getContrastRatio, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
+import MenuAppBar from './MenuAppBar';
+
 
 const blueBase = "#7F00FF";
 const blueMain = alpha(blueBase, 0.7);
@@ -122,7 +124,8 @@ export default function HomePage() {
 
     return (
         <ThemeProvider theme={theme}>
-        <Box sx={{ flexGrow: 0}}>
+        <MenuAppBar></MenuAppBar>
+        <Box sx={{ flexGrow: 0, marginTop: 3}}>
             <Grid container spacing={1}>
                 <Grid size={6}>
                     <FormControl color="blue" sx={{width: 0.78}}>
@@ -194,7 +197,13 @@ export default function HomePage() {
                     <DatePickerUI color="blue"></DatePickerUI>
                 </Grid>  
                 <Grid size={12}>
-                    ‌<Button fullWidth size="large" variant="contained" color="blue" sx={{marginTop: 1, borderRadius: 0}}>Рассчитать</Button>
+                    ‌<Button 
+                        fullWidth 
+                        size="large" 
+                        variant="contained" 
+                        color="blue" 
+                        sx={{marginTop: 1, borderRadius: 0}}
+                        onClick={() =>{}}>Рассчитать</Button>
                 </Grid>
             </Grid>
         </Box>

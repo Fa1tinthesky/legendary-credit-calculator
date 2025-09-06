@@ -1,6 +1,0 @@
-package repository
-
-
-func GetDataForExcel()  {
-	
-}

@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './components/HomePage';
+
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -10,7 +10,7 @@ function App() {
   return (
       <Router>
         <Routes>
-            <Route path='/' element={<HomePage />}></Route>
+            <Route path='/' element={<HomePage>jdflksajflksaj f</HomePage>}></Route> 
             <Route path='*' element={<h1>404. Not found</h1>}></Route> 
         </Routes>
       </Router>

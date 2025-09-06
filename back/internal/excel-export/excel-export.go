@@ -49,8 +49,8 @@ func GetExcelHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Disposition", "attachment; filename=payments.xlsx")
 	w.Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-	w.Write(fileBytes)
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write(fileBytes)
 }

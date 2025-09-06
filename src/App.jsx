@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import TableComponent from "./components/TableComponent";
+import FormComponent from "./components/FormComponent/FormComponent";
 
 function App() {
     return (
@@ -8,38 +8,9 @@ function App() {
                 <Route
                     path="/"
                     element={
-                        <TableComponent
-                            table={[
-                                {
-                                    date: "Март, 2025",
-                                    sum: 14977.23,
-                                    main_debt: 10477.23,
-                                    percent: 4500.0,
-                                    remain: 289522.77,
-                                },
-                                {
-                                    date: "Март, 2025",
-                                    sum: 14977.23,
-                                    main_debt: 10477.23,
-                                    percent: 4500.0,
-                                    remain: 289522.77,
-                                },
-                                {
-                                    date: "Март, 2025",
-                                    sum: 14977.23,
-                                    main_debt: 10477.23,
-                                    percent: 4500.0,
-                                    remain: 289522.77,
-                                },
-                                {
-                                    date: "Март, 2025",
-                                    sum: 14977.23,
-                                    main_debt: 10477.23,
-                                    percent: 4500.0,
-                                    remain: 289522.77,
-                                },
-                            ]}
-                        />
+                        <main>
+                            <FormComponent></FormComponent>
+                        </main>
                     }
                 ></Route>
                 <Route path="*" element={<h1>404. Not found</h1>}></Route>

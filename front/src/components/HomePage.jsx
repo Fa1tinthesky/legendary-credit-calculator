@@ -28,6 +28,7 @@ import {
 } from "@mui/material/styles";
 import { useReducer, useState, useRef } from "react";
 import MenuAppBar from "./MenuAppBar";
+import { isAuth } from "../functions/auth";
 
 const blueBase = "#000000";
 const blueMain = alpha(blueBase, 0.7);
@@ -256,6 +257,8 @@ export default function HomePage() {
     const [chosen_currencie, set_chosen_currencie] = useState(
         currencies[1].label
     );
+
+    console.log(isAuth());
 
     const [showTable, setShowTable] = useState(false);
     const [isLoading, setIsLoading] = useState(true);

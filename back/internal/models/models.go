@@ -57,7 +57,7 @@ type CalculationTable struct {
 
 type Create_calc_model struct {
 	Rows   []entities.PaymentSchedule `json:"rows"`
-	Cookie string                     `json:"cookies"`
+	Cookie string                     `json:"cookie"`
 }
 
 type Get_calc_model struct {

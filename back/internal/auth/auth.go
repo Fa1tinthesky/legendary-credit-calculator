@@ -24,16 +24,18 @@ var ErrIncorrectCookie = errors.New("несуществующая кука")
 var ErrIncorrectPassword = errors.New("неправильный пароль")
 var ErrNonExistingUser = errors.New("такого пользователя не существует")
 
-func Sign_up(ctx context.Context, db *pgxpool.Pool, request models.Sign_up_request) error {
+func Sign_up(db *pgxpool.Pool, request models.Sign_up_request) error {
+	ctx := context.Background()
 	tx, err := db.Begin(ctx)
 	if err != nil {
+		fmt.Println(1)
 		return err
 	}
 
 	var email string
 	err = tx.QueryRow(ctx, `SELECT email FROM users WHERE email = $1`, request.Mail).Scan(&email)
 	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
-		fmt.Println(1)
+		fmt.Println(2)
 		return err
 	}
 
@@ -43,6 +45,7 @@ func Sign_up(ctx context.Context, db *pgxpool.Pool, request models.Sign_up_reque
 
 	n, err := rand.Int(rand.Reader, big.NewInt(900000))
 	if err != nil {
+		fmt.Println(3)
 		return err
 	}
 	code := n.Int64() + 100000
@@ -51,14 +54,13 @@ func Sign_up(ctx context.Context, db *pgxpool.Pool, request models.Sign_up_reque
 	_ = now.Add(10 * time.Minute)
 	_, err = tx.Exec(ctx, `DELETE FROM temp_users WHERE email = $1`, request.Mail)
 	if err != nil {
-		fmt.Println(3)
+		fmt.Println(4)
 		return err
 	}
-
 	_, err = db.Exec(ctx, `INSERT INTO temp_users (email , email_password , login ,temp_code , finish_time) 
 		VALUES ($1 , $2 , $3 , $4 , $5)`, request.Mail, request.Password, request.Login, code, now)
 	if err != nil {
-		fmt.Println(4)
+		fmt.Println(5)
 		return err
 	}
 	tx.Commit(ctx)
@@ -73,63 +75,64 @@ func Sign_up(ctx context.Context, db *pgxpool.Pool, request models.Sign_up_reque
 	send := gomail.NewDialer("smtp.gmail.com", 587, "app75490@gmail.com", "znvh weto comb wkkd ")
 	err = send.DialAndSend(m)
 	if err != nil {
-		fmt.Println(2)
-		return err
-	}
-	return nil
-}
-
-func Confirm_email(ctx context.Context, db *pgxpool.Pool, request models.Confirm_email_request) error {
-	tx, err := db.Begin(ctx)
-	if err != nil {
-		return err
-	}
-
-	var temp_user models.Temp_user
-	err = tx.QueryRow(ctx, `SELECT id , email , email_password , login , temp_code FROM temp_users WHERE email = $1`, request.Mail).
-		Scan(&temp_user.Id, &temp_user.Email, &temp_user.Email_password, &temp_user.Login, &temp_user.Temp_code)
-	if err != nil {
-		return err
-	}
-
-	if temp_user.Temp_code != request.Password {
-		return ErrIncorrectCode
-	}
-
-	_, err = tx.Exec(ctx, `INSERT INTO users(email , password , login) VALUES($1 , $2 , $3)`,
-		&temp_user.Email, &temp_user.Email_password, temp_user.Login)
-	if err != nil {
+		fmt.Println(6)
 		return err
 	}
 	tx.Commit(ctx)
 	return nil
 }
 
-func Sign_in(ctx context.Context, db *pgxpool.Pool, rdb *redis.Client, request models.Confirm_email_request) (error, *http.Cookie) {
+func Confirm_email(db *pgxpool.Pool, request models.Confirm_email_request) error {
+	ctx := context.Background()
 	tx, err := db.Begin(ctx)
 	if err != nil {
-		return err, nil
+		return err
 	}
 
+	var temp_user models.Temp_user
+	err = db.QueryRow(ctx, `SELECT id , email , email_password , login , temp_code FROM temp_users WHERE email = $1`, request.Mail).
+		Scan(&temp_user.Id, &temp_user.Email, &temp_user.Email_password, &temp_user.Login, &temp_user.Temp_code)
+	if err != nil {
+		fmt.Println(1)
+		return err
+	}
+
+	if temp_user.Temp_code != request.Password {
+		return ErrIncorrectCode
+	}
+	_, err = tx.Exec(ctx, `INSERT INTO users(email , password , login) VALUES($1 , $2 , $3)`,
+		temp_user.Email, temp_user.Email_password, temp_user.Login)
+	if err != nil {
+		fmt.Println(2)
+		return err
+	}
+	tx.Commit(ctx)
+	return nil
+}
+
+func Sign_in(db *pgxpool.Pool, rdb *redis.Client, request models.Confirm_email_request) (error, *http.Cookie, *string) {
+	ctx := context.Background()
+
 	var password string
-	err = tx.QueryRow(ctx, `SELECT password FROM users WHERE email = $1`, request.Mail).Scan(&password)
+	err := db.QueryRow(ctx, `SELECT password FROM users WHERE email = $1`, request.Mail).Scan(&password)
 	if err == pgx.ErrNoRows {
-		return ErrNonExistingUser, nil
+		return ErrNonExistingUser, nil, nil
 	}
 	if err != nil {
-		return err, nil
+		return err, nil, nil
 	}
 
 	if password != request.Password {
-		return ErrIncorrectPassword, nil
+		return ErrIncorrectPassword, nil, nil
 	}
 
-	cookie := Set_cookies(rdb, request.Mail)
+	cookie, str := Set_cookies(rdb, request.Mail)
 
-	return nil, cookie
+	return nil, cookie, &str
 }
 
-func Sign_out(ctx context.Context, rdb *redis.Client, email string) (*http.Cookie, error) {
+func Sign_out(rdb *redis.Client, email string) (*http.Cookie, error) {
+	ctx := context.Background()
 	_, err := rdb.Get(ctx, email).Result()
 	if err == redis.Nil {
 		return nil, ErrIncorrectCookie
@@ -153,13 +156,14 @@ func Delete_cookies(ctx context.Context, rdb *redis.Client, email string) *http.
 	return cookie
 }
 
-func Set_cookies(rdb *redis.Client, mail string) *http.Cookie {
+func Set_cookies(rdb *redis.Client, mail string) (*http.Cookie, string) {
 	id := uuid.New()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	rdb.Set(ctx, mail, id.String(), 315360000*time.Second)
+	rdb.Set(ctx, id.String(), mail, 315360000*time.Second)
 	cookie := &http.Cookie{
 		Name:     "session_id",
 		Value:    id.String(),
@@ -169,5 +173,5 @@ func Set_cookies(rdb *redis.Client, mail string) *http.Cookie {
 		Expires:  time.Now().Add(315360000 * time.Second),
 	}
 
-	return cookie
+	return cookie, id.String()
 }

@@ -12,7 +12,7 @@ import (
 )
 
 func Send_allert_messages(ctx context.Context, db *pgxpool.Pool) error {
-	rows, err := db.Query(ctx, `SELECT * FROM table_unit`)
+	rows, err := db.Query(ctx, `SELECT * FROM table_unit WHERE data <= NOW()`)
 	if err != nil {
 		return err
 	}
@@ -31,9 +31,8 @@ func Send_allert_messages(ctx context.Context, db *pgxpool.Pool) error {
 			m := gomail.NewMessage()
 			m.SetHeader("From", "app75490@gmail.com")
 			m.SetHeader("To", unit.Mail)
-			m.SetHeader("Subject", "App verifycation")
+			m.SetHeader("Subject", "App verification")
 			m.SetBody("text/html", fmt.Sprintf(`<h1 class="header" style = "color:blue">%s</h1>`, mail_meesage))
-			_, _ = db.Exec(ctx, `DELETE FROM table_unit WHERE id = $1`, unit.Id)
 		}
 	}
 

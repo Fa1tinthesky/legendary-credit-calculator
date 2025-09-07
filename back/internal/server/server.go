@@ -1,11 +1,10 @@
 package server
 
 import (
+	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/auth"
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/calculation"
-	"github.com/go-chi/chi/v5"
-	"github.com/rs/cors"
-	"log"
-	"net/http"
+	"github.com/labstack/echo/v4"
+	mw "github.com/labstack/echo/v4/middleware"
 )
 
 type Server struct {
@@ -19,20 +18,19 @@ func NewServer(port string) *Server {
 }
 
 func (s *Server) Run() {
-	r := chi.NewRouter()
+	r := echo.New()
+	r.Use(mw.Logger())
+	r.Use(mw.CORSWithConfig(mw.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{echo.GET, echo.POST, echo.DELETE, echo.PATCH, echo.OPTIONS},
+		AllowHeaders: []string{"Content-Type", "session_id"},
+	}))
 
-	r.Post("/api/calculate", calculation.CalculateHandler)
+	r.POST("/auth/sign-up", auth.Sign_up_handler)
+	r.POST("/auth/confirm-email", auth.Confirm_email_handler)
+	r.POST("/auth/sign-in", auth.Sign_in_handler)
+	r.POST("/auth/sign-out", auth.Sign_out_handler)
+	r.GET("/calculate", calculation.CalculateHandler)
 
-	corsHandler := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"},
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders: []string{"Content-Type", "Authorization"},
-	})
-
-	handler := corsHandler.Handler(r)
-
-	log.Println("Starting server on port " + s.Port)
-	if err := http.ListenAndServe(":"+s.Port, handler); err != nil {
-		log.Fatal(err)
-	}
+	r.Logger.Fatal(r.Start("10.192.9.206:8080"))
 }

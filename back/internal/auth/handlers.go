@@ -1,124 +1,123 @@
 package auth
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
-	"time"
 
+	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/databases/db"
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/models"
-
-	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/redis/go-redis/v9"
+	"github.com/labstack/echo/v4"
 )
 
-func Sign_up_handler(db *pgxpool.Pool) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
-		defer cancel()
-
-		var request models.Sign_up_request
-		err := json.NewDecoder(r.Body).Decode(&request)
-		if err != nil {
-			http.Error(w, "Неправильный формат данных", http.StatusBadRequest)
-			return
-		}
-
-		err = Sign_up(ctx, db, request)
-		if err != nil {
-			if errors.Is(err, ErrUserExists) {
-				http.Error(w, "Такой пользователь уже существует", http.StatusBadRequest)
-				return
-			} else {
-				http.Error(w, "Ошибка сервера", http.StatusInternalServerError)
-				fmt.Println(err)
-				return
-			}
-		}
-
-		w.Write([]byte("Отправлен код подтверждения на почту"))
-	}
+type Dodi struct {
+	Status *string `json:"status"`
 }
 
-func Confirm_email_handler(db *pgxpool.Pool) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
-		defer cancel()
-
-		var request models.Confirm_email_request
-		err := json.NewDecoder(r.Body).Decode(&request)
-		if err != nil {
-			http.Error(w, "Неправильный формат данных", http.StatusBadRequest)
-			return
-		}
-
-		err = Confirm_email(ctx, db, request)
-		if err != nil {
-			if errors.Is(err, ErrIncorrectCode) {
-				http.Error(w, "Неправильный пароль", http.StatusBadRequest)
-				return
-			} else {
-				http.Error(w, "Ошибка сервера", http.StatusInternalServerError)
-				return
-			}
-		}
-		w.Write([]byte("Пользователь зарегистрирован"))
+func Sign_up_handler(c echo.Context) error {
+	db := db.DB
+	var request models.Sign_up_request
+	err := json.NewDecoder(c.Request().Body).Decode(&request)
+	if err != nil {
+		http.Error(c.Response().Writer, "Неправильный формат данных", http.StatusBadRequest)
+		return nil
 	}
+
+	err = Sign_up(db, request)
+	if err != nil {
+		if errors.Is(err, ErrUserExists) {
+			http.Error(c.Response(), "Такой пользователь уже существует", http.StatusBadRequest)
+			return nil
+		} else {
+			http.Error(c.Response().Writer, "Ошибка сервера", http.StatusInternalServerError)
+			fmt.Println(err)
+			return nil
+		}
+	}
+
+	c.Response().Write([]byte("Отправлен код подтверждения на почту"))
+	return nil
 }
 
-func Sign_in_handler(db *pgxpool.Pool, rdb *redis.Client) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
-		defer cancel()
-
-		var request models.Confirm_email_request
-		err := json.NewDecoder(r.Body).Decode(&request)
-		if err != nil {
-			http.Error(w, "Неправильный формат данных", http.StatusBadRequest)
-			return
-		}
-
-		err, cookie := Sign_in(ctx, db, rdb, request)
-		if err != nil {
-			if err == ErrIncorrectPassword || err == ErrNonExistingUser {
-				http.Error(w, "Неправильный пароль", http.StatusBadRequest)
-				return
-			} else {
-				http.Error(w, "Ошибка сервера", http.StatusInternalServerError)
-				return
-			}
-		}
-		http.SetCookie(w, cookie)
-		w.Write([]byte("Пользователь авторизован"))
+func Confirm_email_handler(c echo.Context) error {
+	db := db.DB
+	var request models.Confirm_email_request
+	err := json.NewDecoder(c.Request().Body).Decode(&request)
+	if err != nil {
+		http.Error(c.Response(), "Неправильный формат данных", http.StatusBadRequest)
+		return nil
 	}
+
+	err = Confirm_email(db, request)
+	if err != nil {
+		if errors.Is(err, ErrIncorrectCode) {
+			http.Error(c.Response(), "Неправильный пароль", http.StatusBadRequest)
+			return nil
+		} else {
+			http.Error(c.Response(), "Ошибка сервера", http.StatusInternalServerError)
+			fmt.Println(err)
+			return nil
+		}
+	}
+	c.Response().Write([]byte("Пользователь зарегистрирован"))
+	return nil
 }
 
-func Sign_out_handler(rdb *redis.Client) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
-		defer cancel()
-
-		var request models.Sign_out_request
-		err := json.NewDecoder(r.Body).Decode(&request)
-		if err != nil {
-			http.Error(w, "Неправильный формат данных", http.StatusBadRequest)
-			return
-		}
-
-		cookie, err := Sign_out(ctx, rdb, request.Mail)
-		if err != nil {
-			if err != ErrIncorrectCookie {
-				http.Error(w, "Не существующий пользователь", http.StatusBadRequest)
-				return
-			} else {
-				http.Error(w, "Ошибка сервера", http.StatusInternalServerError)
-				fmt.Println(err)
-				return
-			}
-		}
-		http.SetCookie(w, cookie)
-		w.Write([]byte("Успешно выполнен выход"))
+func Sign_in_handler(c echo.Context) error {
+	fmt.Println("Зашел")
+	dbd := db.DB
+	rdb := db.RDB
+	var request models.Confirm_email_request
+	err := json.NewDecoder(c.Request().Body).Decode(&request)
+	if err != nil {
+		http.Error(c.Response(), "Неправильный формат данных", http.StatusBadRequest)
+		return nil
 	}
+	fmt.Println("Дошел 1")
+	err, cookie, str := Sign_in(dbd, rdb, request)
+	fmt.Println("Дошел 2")
+	if err != nil {
+		if err == ErrIncorrectPassword || err == ErrNonExistingUser {
+			http.Error(c.Response(), "Неправильный пароль", http.StatusBadRequest)
+			return nil
+		} else {
+			fmt.Println(err)
+			http.Error(c.Response(), "Ошибка сервера", http.StatusInternalServerError)
+			return nil
+		}
+	}
+
+	http.SetCookie(c.Response(), cookie)
+	c.Response().Writer.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(c.Response()).Encode(&Dodi{
+		Status: str,
+	})
+	return nil
+}
+
+func Sign_out_handler(c echo.Context) error {
+	rdb := db.RDB
+
+	var request models.Sign_out_request
+	err := json.NewDecoder(c.Request().Body).Decode(&request)
+	if err != nil {
+		http.Error(c.Response(), "Неправильный формат данных", http.StatusBadRequest)
+		return nil
+	}
+
+	cookie, err := Sign_out(rdb, request.Mail)
+	if err != nil {
+		if err != ErrIncorrectCookie {
+			http.Error(c.Response(), "Не существующий пользователь", http.StatusBadRequest)
+			return nil
+		} else {
+			http.Error(c.Response(), "Ошибка сервера", http.StatusInternalServerError)
+			fmt.Println(err)
+			return nil
+		}
+	}
+	http.SetCookie(c.Response(), cookie)
+	c.Response().Write([]byte("Успешно выполнен выход"))
+	return nil
 }

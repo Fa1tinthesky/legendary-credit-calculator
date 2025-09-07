@@ -2,9 +2,11 @@ package calculation
 
 import (
 	"encoding/json"
+	"net/http"
+
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/calculation/entities"
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/pkg/calculator"
-	"net/http"
+	"github.com/labstack/echo/v4"
 )
 
 type CalculationRequest struct {
@@ -22,14 +24,14 @@ type CalculationResponse struct {
 	Sum     float64                    `json:"sum"`
 }
 
-func CalculateHandler(w http.ResponseWriter, r *http.Request) {
+func CalculateHandler(c echo.Context) error {
 	var calcRequest *CalculationRequest
 	var calcResponse CalculationResponse
 
-	err := json.NewDecoder(r.Body).Decode(&calcRequest)
-	defer r.Body.Close()
+	err := json.NewDecoder(c.Request().Body).Decode(&calcRequest)
+	defer c.Request().Body.Close()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(c.Response(), err.Error(), http.StatusBadRequest)
 	}
 
 	creditCalc := calculator.NewCreditCalculator()
@@ -42,8 +44,9 @@ func CalculateHandler(w http.ResponseWriter, r *http.Request) {
 		calcRequest.StartDate,
 	)
 
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(calcResponse); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	c.Response().Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(c.Response()).Encode(calcResponse); err != nil {
+		http.Error(c.Response(), err.Error(), http.StatusInternalServerError)
 	}
+	return nil
 }

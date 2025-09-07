@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -65,4 +66,37 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+=======
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Roboto, Arial, sans-serif;
+}
+
+main {
+    background-image: url('./assets/white-bg-image.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    min-height: 100vh;
+}
+
+.glass_matte_effect {
+    background: rgba(0, 0, 0, 0.1) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+}
+
+.focus_input:focus, 
+.focus_input:focus-within, 
+.focus_input:focus-visible {
+    outline-color: black !important;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+>>>>>>> main
 }

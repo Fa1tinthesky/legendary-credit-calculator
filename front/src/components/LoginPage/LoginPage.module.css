@@ -187,3 +187,10 @@
 .signUp a:hover {
     border-color: black;
 }
+
+.error {
+    position: absolute;
+    color: #f00;
+    font-size: 14px;
+    top: 270px;
+}

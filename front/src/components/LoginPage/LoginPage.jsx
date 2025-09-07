@@ -32,13 +32,13 @@ export default function LoginPage() {
                         type="password"
                         placeholder="Password"
                     />
+
+                    <div className={classes.error}>{error}</div>
                 </div>
                 <div className={classes.signUp}>
                     У вас нет аккаунта{" "}
                     <Link to={"/register"}>Зарегистрироваться!</Link>
                 </div>
-
-                <div className={classes.error}>{error}</div>
 
                 <div className={classes.container_button}>
                     <button
@@ -48,7 +48,7 @@ export default function LoginPage() {
                                 mail: mailRef.current.value,
                                 password: passwordRef.current.value,
                                 navigate,
-                                error
+                                setError,
                             });
                             setIsLoading(false);
                         }}

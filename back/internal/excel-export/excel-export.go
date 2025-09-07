@@ -1,12 +1,11 @@
 package excel_export
 
 import (
-	"net/http"
-
+	"encoding/json"
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/calculation/entities"
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/pkg/calculator"
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/pkg/excel"
-	"github.com/labstack/echo/v4"
+	"net/http"
 )
 
 type CalculationRequest struct {
@@ -24,16 +23,19 @@ type CalculationResponse struct {
 	Sum     float64                    `json:"sum"`
 }
 
-func GetExcelHandler(c echo.Context) error {
-	var calcRequest CalculationRequest
+func GetExcelHandler(w http.ResponseWriter, r *http.Request) {
+	var calcRequest *CalculationRequest
+	var calcResponse CalculationResponse
 
-	if err := c.Bind(&calcRequest); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	err := json.NewDecoder(r.Body).Decode(&calcRequest)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
 	creditCalc := calculator.NewCreditCalculator()
 
-	table, _, _ := creditCalc.Calculate(
+	calcResponse.Table, _, _ = creditCalc.Calculate(
 		calcRequest.Sum,
 		calcRequest.Period,
 		calcRequest.Rate,
@@ -41,14 +43,14 @@ func GetExcelHandler(c echo.Context) error {
 		calcRequest.StartDate,
 	)
 
-	fileBytes, err := excel.ExportToExcel(table, "Sheet1")
+	fileBytes, err := excel.ExportToExcel(calcResponse.Table, "Sheet1")
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
-	c.Response().Header().Set("Content-Disposition", "attachment; filename=payments.xlsx")
-	c.Response().Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-	c.Response().WriteHeader(http.StatusOK)
-	_, _ = c.Response().Write(fileBytes)
-	return nil
+	w.Header().Set("Content-Disposition", "attachment; filename=payments.xlsx")
+	w.Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write(fileBytes)
 }

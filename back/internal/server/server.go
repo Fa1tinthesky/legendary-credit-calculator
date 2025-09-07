@@ -3,6 +3,7 @@ package server
 import (
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/auth"
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/calculation"
+	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/excel-export"
 	"github.com/labstack/echo/v4"
 	mw "github.com/labstack/echo/v4/middleware"
 )
@@ -30,7 +31,8 @@ func (s *Server) Run() {
 	r.POST("/auth/confirm-email", auth.Confirm_email_handler)
 	r.POST("/auth/sign-in", auth.Sign_in_handler)
 	r.POST("/auth/sign-out", auth.Sign_out_handler)
-	r.GET("/calculate", calculation.CalculateHandler)
+	r.POST("/api/calculate", calculation.CalculateHandler)
+	r.GET("/api/get-excel", excel_export.GetExcelHandler)
 
 	r.Logger.Fatal(r.Start("10.192.9.206:8080"))
 }

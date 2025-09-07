@@ -2,10 +2,12 @@ package excel_export
 
 import (
 	"encoding/json"
+	"net/http"
+
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/calculation/entities"
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/pkg/calculator"
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/pkg/excel"
-	"net/http"
+	"github.com/labstack/echo/v4"
 )
 
 type CalculationRequest struct {
@@ -23,15 +25,15 @@ type CalculationResponse struct {
 	Sum     float64                    `json:"sum"`
 }
 
-func GetExcelHandler(w http.ResponseWriter, r *http.Request) {
+func GetExcelHandler(c echo.Context) error {
 	var calcRequest *CalculationRequest
 	var calcResponse CalculationResponse
 
-	err := json.NewDecoder(r.Body).Decode(&calcRequest)
-	defer r.Body.Close()
+	err := json.NewDecoder(c.Request().Body).Decode(&calcRequest)
+	defer c.Request().Body.Close()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+		http.Error(c.Response(), err.Error(), http.StatusBadRequest)
+		return nil
 	}
 
 	creditCalc := calculator.NewCreditCalculator()
@@ -46,12 +48,13 @@ func GetExcelHandler(w http.ResponseWriter, r *http.Request) {
 
 	fileBytes, err := excel.ExportToExcel(calcResponse.Table, "График выплат")
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		http.Error(c.Response(), err.Error(), http.StatusInternalServerError)
+		return nil
 	}
 
-	w.Header().Set("Content-Disposition", "attachment; filename=payments.xlsx")
-	w.Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write(fileBytes)
+	c.Response().Header().Set("Content-Disposition", "attachment; filename=payments.xlsx")
+	c.Response().Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	c.Response().WriteHeader(http.StatusOK)
+	_, _ = c.Response().Write(fileBytes)
+	return nil
 }

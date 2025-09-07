@@ -1,7 +1,6 @@
 package excel_export
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/calculation/entities"
@@ -26,19 +25,15 @@ type CalculationResponse struct {
 }
 
 func GetExcelHandler(c echo.Context) error {
-	var calcRequest *CalculationRequest
-	var calcResponse CalculationResponse
+	var calcRequest CalculationRequest
 
-	err := json.NewDecoder(c.Request().Body).Decode(&calcRequest)
-	defer c.Request().Body.Close()
-	if err != nil {
-		http.Error(c.Response(), err.Error(), http.StatusBadRequest)
-		return nil
+	if err := c.Bind(&calcRequest); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 	}
 
 	creditCalc := calculator.NewCreditCalculator()
 
-	calcResponse.Table, _, _ = creditCalc.Calculate(
+	table, _, _ := creditCalc.Calculate(
 		calcRequest.Sum,
 		calcRequest.Period,
 		calcRequest.Rate,
@@ -46,10 +41,9 @@ func GetExcelHandler(c echo.Context) error {
 		calcRequest.StartDate,
 	)
 
-	fileBytes, err := excel.ExportToExcel(calcResponse.Table, "График выплат")
+	fileBytes, err := excel.ExportToExcel(table, "Sheet1")
 	if err != nil {
-		http.Error(c.Response(), err.Error(), http.StatusInternalServerError)
-		return nil
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 
 	c.Response().Header().Set("Content-Disposition", "attachment; filename=payments.xlsx")

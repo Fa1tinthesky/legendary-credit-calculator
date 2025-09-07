@@ -3,6 +3,7 @@ import classes from "./SignUp.module.css";
 import { confirmEmail, signOut, signUp } from "../../functions/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { Backdrop, Button, CircularProgress } from "@mui/material";
+import MenuAppBar from "../MenuAppBar";
 
 export default function SignUpPage() {
     const navigate = useNavigate();
@@ -54,39 +55,42 @@ export default function SignUpPage() {
 
     if (isConfirmPassword) {
         return (
-            <main className={classes.main}>
-                <div className={`${classes.confirm_card}`}>
-                    <h2>
-                        Введите шестизначный код <br /> отправленный на ваш
-                        email
-                    </h2>
-                    <input
-                        ref={codeRef}
-                        type="text"
-                        className={classes.input}
-                    />
-                    <div className={classes.confirm_error}>{error}</div>
-                    <Button
-                        fullWidth
-                        size="large"
-                        variant="contained"
-                        color="blue"
-                        sx={{ margin: 1, borderRadius: 16 }}
-                        onClick={handleConfirm}
+            <>
+                <MenuAppBar></MenuAppBar>
+                <main className={classes.main}>
+                    <div className={`${classes.confirm_card}`}>
+                        <h2>
+                            Введите шестизначный код <br /> отправленный на ваш
+                            email
+                        </h2>
+                        <input
+                            ref={codeRef}
+                            type="text"
+                            className={classes.input}
+                        />
+                        <div className={classes.confirm_error}>{error}</div>
+                        <Button
+                            fullWidth
+                            size="large"
+                            variant="contained"
+                            color="blue"
+                            sx={{ margin: 1, borderRadius: 16 }}
+                            onClick={handleConfirm}
+                        >
+                            Подтвердить
+                        </Button>
+                    </div>
+                    <Backdrop
+                        sx={(theme) => ({
+                            color: "#fff",
+                            zIndex: theme.zIndex.drawer + 1,
+                        })}
+                        open={isLoading}
                     >
-                        Подтвердить
-                    </Button>
-                </div>
-                <Backdrop
-                    sx={(theme) => ({
-                        color: "#fff",
-                        zIndex: theme.zIndex.drawer + 1,
-                    })}
-                    open={isLoading}
-                >
-                    <CircularProgress color="inherit" />
-                </Backdrop>
-            </main>
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
+                </main>
+            </>
         );
     }
 

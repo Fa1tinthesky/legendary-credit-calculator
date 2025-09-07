@@ -18,6 +18,7 @@ func Create_calc_handler(c echo.Context) error {
 	var request models.Create_calc_model
 	err := json.NewDecoder(c.Request().Body).Decode(&request)
 	if err != nil {
+		fmt.Println(err)
 		http.Error(c.Response(), "Неправильный формат", http.StatusBadRequest)
 		return nil
 	}
@@ -48,7 +49,7 @@ func Get_calc_handler(c echo.Context) error {
 		return nil
 	}
 	sort.Slice(response, func(i, j int) bool {
-		return response[i].Object.Date.After(response[j].Object.Date)
+		return response[i].Object.Date.Before(response[j].Object.Date)
 	})
 
 	c.Response().Header().Set("Content-Type", "application/json")

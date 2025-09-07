@@ -4,7 +4,7 @@ import (
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/auth"
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/calculation"
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/dashboard"
-	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/excel-export"
+	excel_export "github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/excel-export"
 	"github.com/labstack/echo/v4"
 	mw "github.com/labstack/echo/v4/middleware"
 )
@@ -34,8 +34,8 @@ func (s *Server) Run() {
 	r.POST("/auth/sign-out", auth.Sign_out_handler)
 	r.POST("/api/calculate", calculation.CalculateHandler)
 	r.GET("/api/get-excel", excel_export.GetExcelHandler)
-	r.GET("/api/create-calc", dashboard.Create_calc_handler)
-	r.GET("/api/get-calc", dashboard.Get_calc_handler)
+	r.POST("/api/create-calc", dashboard.Create_calc_handler)
+	r.POST("/api/get-calc", dashboard.Get_calc_handler)
 
 	r.Logger.Fatal(r.Start("0.0.0.0:8080"))
 }

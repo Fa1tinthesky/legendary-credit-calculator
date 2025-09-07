@@ -29,8 +29,8 @@ func Create_calc(request models.Create_calc_model, cookie string) error {
 	}
 
 	for _, v := range request.Rows {
-		_, err = tx.Exec(ctx, `INSERT INTO table_unit(email , amount , data , interest , remainder) VALUES ($1 , $2 , $3 , $4 , $5)`,
-			email, v.Body, v.Date, v.Interest, v.Remainder)
+		_, err = tx.Exec(ctx, `INSERT INTO table_unit(email , body , data , interest , remainder , payment) VALUES ($1 , $2 , $3 , $4 , $5 , $6)`,
+			email, v.Body, v.Date, v.Interest, v.Remainder, v.Payment)
 		if err != nil {
 			fmt.Println(3)
 			return err
@@ -53,14 +53,14 @@ func Get_calc(cookie string) (error, []models.Get_calc_model) {
 	}
 
 	var response []models.Get_calc_model
-	query, err := dbd.Query(ctx, `SELECT amount , data , interest , remainder FROM table_unit WHERE email = $1`, email)
+	query, err := dbd.Query(ctx, `SELECT body , data , interest , remainder , payment FROM table_unit WHERE email = $1`, email)
 	if err != nil {
 		return err, nil
 	}
 
 	for query.Next() {
 		var unit models.Get_calc_model
-		err = query.Scan(&unit.Object.Payment, &unit.Object.Date, &unit.Object.Interest, &unit.Object.Remainder)
+		err = query.Scan(&unit.Object.Body, &unit.Object.Date, &unit.Object.Interest, &unit.Object.Remainder, &unit.Object.Payment)
 		if err != nil {
 			return err, nil
 		}

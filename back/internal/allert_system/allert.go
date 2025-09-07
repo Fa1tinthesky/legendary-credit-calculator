@@ -5,34 +5,41 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/models"
-
 	"github.com/jackc/pgx/v5/pgxpool"
 	"gopkg.in/gomail.v2"
 )
 
-func Send_allert_messages(ctx context.Context, db *pgxpool.Pool) error {
-	rows, err := db.Query(ctx, `SELECT * FROM table_unit WHERE data <= NOW()`)
+type Alert struct {
+	Mail string    `json:"email"`
+	Body float64   `json:"body"`
+	Data time.Time `json:"data"`
+}
+
+func Send_allert_messages(db *pgxpool.Pool) error {
+	ctx := context.Background()
+	rows, err := db.Query(ctx, `SELECT email , body , data FROM table_unit WHERE data <= NOW()`)
 	if err != nil {
 		return err
 	}
 
 	for rows.Next() {
-		var unit models.Table_unit
-		err = rows.Scan(&unit.Id, &unit.Mail, &unit.Amount, &unit.Data)
+		var unit Alert
+		err = rows.Scan(&unit.Mail, &unit.Body, &unit.Data)
 		if err != nil {
 			return err
 		}
 
-		need_date := time.Now().Add(24 * time.Hour)
+		need_date := time.Now().Add(754 * time.Hour)
 
 		if need_date.After(unit.Data) {
-			mail_meesage := fmt.Sprintf("Hello from LCC\n Tommorow you have to pay the bill for your credit: %f", unit.Amount)
+			mail_meesage := fmt.Sprintf("Hello from LCC\n Tommorow you have to pay the bill for your credit: %f", unit.Body)
 			m := gomail.NewMessage()
 			m.SetHeader("From", "app75490@gmail.com")
 			m.SetHeader("To", unit.Mail)
 			m.SetHeader("Subject", "App verification")
-			m.SetBody("text/html", fmt.Sprintf(`<h1 class="header" style = "color:blue">%s</h1>`, mail_meesage))
+			m.SetBody("text/html", fmt.Sprintf(`<h1 class="header" styale = "color:blue">%s</h1>`, mail_meesage))
+			send := gomail.NewDialer("smtp.gmail.com", 587, "app75490@gmail.com", "znvh weto comb wkkd ")
+			_ = send.DialAndSend(m)
 		}
 	}
 

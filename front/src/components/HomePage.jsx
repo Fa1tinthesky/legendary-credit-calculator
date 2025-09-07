@@ -108,7 +108,8 @@ export default function HomePage() {
     const [isRateError, setIsRateError] = useState(false);
     const [chosen_currencie, set_chosen_currencie] = useState(currencies[1].label);
 
-    const hostServer = `http://${import.meta.env.VITE_HOSTIP}:8080`;
+    const hostServer = `http://${import.meta.env.VITE_HOSTIP}:8080;
+
     const [showTable, setShowTable] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState({});

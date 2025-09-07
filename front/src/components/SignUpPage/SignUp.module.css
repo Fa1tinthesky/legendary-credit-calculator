@@ -4,10 +4,44 @@
     align-items: center;
 }
 
+.confirm_card {
+    /* position: relative; */
+    /* width: 360px; */
+    /* height: 520px; */
+    /* margin: 30px; */
+    /* height: 200px;
+    width: 200px; */
+    box-shadow: 20px 20px 50px rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    justify-content: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 1;
+    padding: 20px;
+}
+.confirm_card > .input {
+    margin: 0;
+}
+.confirm_card > h2 {
+    font-size: 20px;
+    font-weight: 500;
+}
+.confirm_card > .confirm_error {
+    transform: none;
+    color: #f00;
+}
+
 .card {
     position: relative;
     width: 360px;
-    height: 480px;
+    height: 520px;
     margin: 30px;
     box-shadow: 20px 20px 50px rgba(0, 0, 0, 0.5);
     border-radius: 15px;
@@ -24,6 +58,7 @@
 }
 .login_heading {
     color: black;
+    /* transform: translateY(-30px); */
     margin-bottom: 350px;
     position: absolute;
 }
@@ -31,7 +66,9 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
-    margin-bottom: 70px;
+
+    /* transform: translateY(-20px); */
+    margin-bottom: 50px;
 }
 .input {
     transition: 0.3s;
@@ -69,6 +106,7 @@
 }
 
 .btn {
+    transform: translateY(70px);
     position: relative;
     display: inline-block;
     border: none;
@@ -172,18 +210,27 @@
         0 0 60px #ff7979;
 }
 
-.signUp {
-    transform: translateY(80px);
+.login {
+    transform: translateY(60px);
     position: relative;
     z-index: 100;
 }
-.signUp a {
+.login a {
     text-decoration: none;
     color: black;
     border-bottom: 1px solid rgba(0, 0, 0, 0.5);
     font-size: 15px;
     transition: 0.2s;
 }
-.signUp a:hover {
+.login a:hover {
     border-color: black;
+}
+
+.error {
+    transform: translateY(20px);
+    z-index: 100;
+    color: #f00;
+    font-size: 14px;
+    position: absolute;
+    top: 340px;
 }

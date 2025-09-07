@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: Roboto, Arial, sans-serif;
 }
 
 main {
@@ -23,4 +24,9 @@ main {
 .focus_input:focus-within, 
 .focus_input:focus-visible {
     outline-color: black !important;
+}
+
+a {
+    text-decoration: none;
+    color: white;
 }

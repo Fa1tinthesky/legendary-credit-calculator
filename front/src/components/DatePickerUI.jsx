@@ -18,18 +18,18 @@ export default function DatePickerUI({ changeBody, color }) {
     }, [formatDate(selectedDate["$d"])]);
 
     return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-                color={color}
-                label="date picker"
-                defaultValue={today}
-                textField={(params) => <TextField {...params} />}
-                value={selectedDate}
-                views={["year", "month", "day"]}
-                onChange={(newValue) => {
-                    setSelectedDate(newValue);
-                }}
-            ></DatePicker>
-        </LocalizationProvider>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                    color={color}
+                    label="Выберите дату"
+                    defaultValue={today}
+                    textField={(params) => <TextField {...params} />}
+                    value={selectedDate}
+                    views={["year", "month", "day"]}
+                    onChange={(newValue) => {
+                        setSelectedDate(newValue);
+                    }}
+                ></DatePicker>
+            </LocalizationProvider>
     );
 }

@@ -9,6 +9,7 @@ export default function LoginPage() {
     const passwordRef = useRef();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         signOut();
@@ -37,6 +38,8 @@ export default function LoginPage() {
                     <Link to={"/register"}>Зарегистрироваться!</Link>
                 </div>
 
+                <div className={classes.error}>{error}</div>
+
                 <div className={classes.container_button}>
                     <button
                         onClick={() => {
@@ -44,9 +47,10 @@ export default function LoginPage() {
                             login({
                                 mail: mailRef.current.value,
                                 password: passwordRef.current.value,
+                                navigate,
+                                error
                             });
                             setIsLoading(false);
-                            navigate("/");
                         }}
                         className={classes.btn}
                     >

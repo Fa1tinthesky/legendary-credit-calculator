@@ -4,18 +4,22 @@ export function signOut() {
     document.cookie = "auth=;";
 }
 
-export default function login({ mail, password }) {
-    fetch("http://10.192.9.206:8080/auth/sign-in", {
+export default function login({ mail, password, navigate, setError }) {
+    fetch(`http://${import.meta.env.VITE_HOSTIP}:8080/auth/sign-in`, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ Mail: mail, Password: password }),
     })
         .then((resp) => {
+            if (!resp.ok) {
+                setError("*Неправильная почта или пароль!")
+            }
+            console.log(resp);
             return resp.json();
         })
         .then((data) => {
             document.cookie = `auth=${data["status"]}`;
-            // console.log(document.cookie, data["status"]);
+            navigate('/');
         });
 }
 
@@ -27,8 +31,9 @@ export function signUp({
     setIsLoading,
     setConfirmPassword,
     setData,
+    navigate,
 }) {
-    fetch("http://10.192.9.206:8080/auth/sign-up", {
+    fetch(`http://${import.meta.env.VITE_HOSTIP}:8080/auth/sign-up`, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ Mail: mail, Password: password, Login: name }),
@@ -42,7 +47,6 @@ export function signUp({
             setError("");
             setConfirmPassword(true);
             setIsLoading(false);
-            // document.cookie("");
             setData({ mail, password });
         })
         .catch((e) => {
@@ -60,7 +64,7 @@ export function confirmEmail({
     navigate,
 }) {
     setIsLoading(true);
-    fetch("http://10.192.9.206:8080/auth/confirm-email", {
+    fetch(`http://${import.meta.env.VITE_HOSTIP}:8080/auth/confirm-email`, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -76,8 +80,7 @@ export function confirmEmail({
             }
             console.log(resp);
             setIsLoading(false);
-            login({ mail: email, password });
-            navigate("/");
+            login({ mail: email, password, navigate });
         })
         .catch((e) => {
             setIsLoading(false);

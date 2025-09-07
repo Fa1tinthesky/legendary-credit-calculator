@@ -6,12 +6,10 @@ import "./HomePage.css";
 import constants from "./constants/constants";
 import MenuAppBar from "./MenuAppBar";
 
-
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./constants/theme";
 import ContentComponent from "./ContentComponent/ContentComponent";
 import getData from "../functions/getData";
-import Stack from "@mui/material/Stack";
 import DatePickerUI from "./DatePickerUI";
 import Button from "@mui/material/Button";
 import {
@@ -26,7 +24,7 @@ import {
     Box,
     Grid,
 } from "@mui/material";
-import { useReducer, useState, useRef } from "react";
+import { useState, useRef } from "react";
 
 function FormOption({
     defaultValue,
@@ -101,14 +99,14 @@ function FormOption({
 }
 
 export default function HomePage() {
-    const {time_terms, money_terms, currencies, debt_types} = constants
-        
+    const { time_terms, money_terms, currencies, debt_types } = constants;
+
     const [isSumError, setIsSumError] = useState(false);
     const [isPeriodError, setIsPeriodError] = useState(false);
     const [isRateError, setIsRateError] = useState(false);
-    const [chosen_currencie, set_chosen_currencie] = useState(currencies[1].label);
-
-    const hostServer = `http://${import.meta.env.VITE_HOSTIP}:8080;
+    const [chosen_currencie, set_chosen_currencie] = useState(
+        currencies[1].label
+    );
 
     const [showTable, setShowTable] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -117,7 +115,6 @@ export default function HomePage() {
     const [resultBody, setResultBody] = useState(body);
     const [multiplier, setMultiplier] = useState(1);
     const [currency, setCurrency] = useState(currencies[1].label);
-    const [dwnLink, setDwnLink] = useState("");
     const periodRef = useRef();
 
     function changeBody(key, value) {
@@ -137,8 +134,7 @@ export default function HomePage() {
 
     const exportHandler = (e) => {
         e.preventDefault();
-
-    }
+    };
 
     const calcHandle = () => {
         if (!body.sum) {
@@ -169,7 +165,7 @@ export default function HomePage() {
                         className="container"
                         sx={{
                             marginTop: 3,
-                            padding: "20px"
+                            padding: "20px",
                         }}
                     >
                         <Grid container spacing={2}>
@@ -335,7 +331,7 @@ export default function HomePage() {
                                     Рассчитать
                                 </Button>
                             </Grid>
-                    </Grid>
+                        </Grid>
                     </Container>
                     {showTable && (
                         <ContentComponent
@@ -343,8 +339,7 @@ export default function HomePage() {
                             currency={currency}
                             isLoading={isLoading}
                             body={resultBody}
-                        >
-                        </ContentComponent>
+                        ></ContentComponent>
                     )}
                 </ThemeProvider>
             </main>

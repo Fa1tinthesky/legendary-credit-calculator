@@ -31,6 +31,7 @@ func GetExcelHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	creditCalc := calculator.NewCreditCalculator()

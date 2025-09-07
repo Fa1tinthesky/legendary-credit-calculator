@@ -6,3 +6,4 @@ func Get_calc(email string) {
 	db := db.DB
 	resp, err := db.Query(`SELECT * FROM`)
 }
+jkb

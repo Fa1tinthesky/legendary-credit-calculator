@@ -3,8 +3,9 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import "./HomePage.css";
-
 import constants from "./constants/constants";
+import MenuAppBar from "./MenuAppBar";
+
 
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./constants/theme";
@@ -26,7 +27,6 @@ import {
     Grid,
 } from "@mui/material";
 import { useReducer, useState, useRef } from "react";
-import MenuAppBar from "./MenuAppBar";
 
 function FormOption({
     defaultValue,
@@ -162,7 +162,7 @@ export default function HomePage() {
     return (
         <>
             <main>
-                <MenuAppBar></MenuAppBar>
+                <MenuAppBar text="Посчитайте Свои Кредитные Платежи"></MenuAppBar>
                 <ThemeProvider theme={theme}>
                     <Container
                         className="container"

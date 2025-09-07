@@ -2,48 +2,69 @@ package excel_export
 
 import (
 	"net/http"
+	"strconv"
 
-	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/calculation/entities"
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/pkg/calculator"
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/pkg/excel"
 	"github.com/labstack/echo/v4"
 )
 
-type CalculationRequest struct {
-	Sum         float64 `json:"sum"`
-	Currency    int     `json:"currency"`
-	Period      int     `json:"period"`
-	Rate        float64 `json:"rate"`
-	PaymentType int     `json:"type"`
-	StartDate   string  `json:"start_date"`
-}
-
-type CalculationResponse struct {
-	Table   []entities.PaymentSchedule `json:"table"`
-	Monthly float64                    `json:"monthly"`
-	Sum     float64                    `json:"sum"`
-}
-
 func GetExcelHandler(c echo.Context) error {
-	var calcRequest CalculationRequest
+	query := c.QueryParams()
 
-	if err := c.Bind(&calcRequest); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	sum, err := strconv.ParseFloat(query.Get("sum"), 64)
+	if err != nil {
+		http.Error(c.Response(), "invalid type", http.StatusBadRequest)
+		return nil
+	}
+
+	// TODO: add currency
+	/*
+		currency, err := strconv.Atoi(query.Get("currency"))
+		if err != nil {
+			http.Error(c.Response(), "invalid type", http.StatusBadRequest)
+			return nil
+		}
+	*/
+
+	period, err := strconv.Atoi(query.Get("period"))
+	if err != nil {
+		http.Error(c.Response(), "invalid type", http.StatusBadRequest)
+		return nil
+	}
+
+	rate, err := strconv.ParseFloat(query.Get("rate"), 64)
+	if err != nil {
+		http.Error(c.Response(), "invalid type", http.StatusBadRequest)
+		return nil
+	}
+
+	paymentType, err := strconv.Atoi(query.Get("paymentType"))
+	if err != nil {
+		http.Error(c.Response(), "invalid type", http.StatusBadRequest)
+		return nil
+	}
+
+	startDate := query.Get("start_date")
+	if startDate == "" {
+		http.Error(c.Response(), "invalid type", http.StatusBadRequest)
+		return nil
 	}
 
 	creditCalc := calculator.NewCreditCalculator()
 
 	table, _, _ := creditCalc.Calculate(
-		calcRequest.Sum,
-		calcRequest.Period,
-		calcRequest.Rate,
-		calcRequest.PaymentType,
-		calcRequest.StartDate,
+		sum,
+		period,
+		rate,
+		paymentType,
+		startDate,
 	)
 
-	fileBytes, err := excel.ExportToExcel(table, "Sheet1")
+	fileBytes, err := excel.ExportToExcel(table, "График выплат")
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		http.Error(c.Response(), "failed to create excel fiel", http.StatusInternalServerError)
+		return nil
 	}
 
 	c.Response().Header().Set("Content-Disposition", "attachment; filename=payments.xlsx")

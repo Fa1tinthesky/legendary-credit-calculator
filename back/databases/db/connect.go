@@ -76,7 +76,6 @@ func Connect_to_db() (*pgxpool.Pool, error) {
 			email TEXT NOT NULL,
 			password TEXT NOT NULL,
 			login TEXT NOT NULL
-
 		)
 	`)
 	if err != nil {

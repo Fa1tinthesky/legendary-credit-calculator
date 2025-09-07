@@ -65,7 +65,7 @@ func Sign_up(db *pgxpool.Pool, request models.Sign_up_request) error {
 	}
 	tx.Commit(ctx)
 
-	mail_meesage := fmt.Sprintf("Hello %s from LCC\n here is you app verifycation code: %v", request.Login, code)
+	mail_meesage := fmt.Sprintf("Hello %s from LCC\n here is you app verification code: %v", request.Login, code)
 	m := gomail.NewMessage()
 	m.SetHeader("From", "app75490@gmail.com")
 	m.SetHeader("To", request.Mail)

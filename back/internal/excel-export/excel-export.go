@@ -6,7 +6,7 @@ import (
 
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/pkg/calculator"
 	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/pkg/excel"
-	"net/http"
+	"github.com/labstack/echo/v4"
 )
 
 func GetExcelHandler(c echo.Context) error {
@@ -67,8 +67,9 @@ func GetExcelHandler(c echo.Context) error {
 		return nil
 	}
 
-	w.Header().Set("Content-Disposition", "attachment; filename=payments.xlsx")
-	w.Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write(fileBytes)
+	c.Response().Header().Set("Content-Disposition", "attachment; filename=payments.xlsx")
+	c.Response().Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	c.Response().WriteHeader(http.StatusOK)
+	_, _ = c.Response().Write(fileBytes)
+	return nil
 }

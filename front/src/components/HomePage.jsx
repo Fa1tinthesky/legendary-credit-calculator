@@ -281,7 +281,6 @@ export default function HomePage() {
     };
 
     const calcHandle = () => {
-        // getData({setData, setIsLoading, setShowTable, body});
         if (!body.sum) {
             setIsSumError(true);
         }
@@ -295,15 +294,15 @@ export default function HomePage() {
         if (body.sum && body.period && body.rate) {
             setCurrency(chosen_currencie);
 
-            setIsLoading(true);
-            setShowTable(true);
+            // setIsLoading(true);
+            // setShowTable(true);
 
-            setTimeout(() => {
-                setData(testData);
-                setIsLoading(false);
-            }, 1000);
+            // setTimeout(() => {
+            //     setData(testData);
+            //     setIsLoading(false);
+            // }, 1000);
 
-            // getData({ setData, setIsLoading, setShowTable, body });
+            getData({ setData, setIsLoading, setShowTable, body });
         }
     };
 

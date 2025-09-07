@@ -2,10 +2,7 @@ export default function getData({ setData, setIsLoading, setShowTable, body }) {
     setIsLoading(true);
     setShowTable(true);
 
-    console.log(body);
-    
-
-    fetch("https://96bea0cf695fd5.lhr.life/api/calculate", {
+    fetch("http://10.192.9.134:8080/api/calculate", {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

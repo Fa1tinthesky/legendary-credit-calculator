@@ -4,17 +4,15 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-// import MenuIcon from "@mui/icons-material/Menu";
+import LogoutIcon from "@mui/icons-material/Logout";
+import LoginIcon from "@mui/icons-material/Login";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { Link, useNavigate } from "react-router-dom";
-// import Switch from "@mui/material/Switch";
-// import FormControlLabel from "@mui/material/FormControlLabel";
-// import FormGroup from "@mui/material/FormGroup";
-// import MenuItem from "@mui/material/MenuItem";
-// import Menu from "@mui/material/Menu";
+import { isAuth, signOut } from "../functions/auth";
 
 export default function MenuAppBar() {
     const navigate = useNavigate();
+    const [state, setState] = React.useState();
 
     const [auth, setAuth] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -60,8 +58,26 @@ export default function MenuAppBar() {
                             navigate("/profile");
                         }}
                     >
-                        <AccountCircle sx={{ color: "black" }}></AccountCircle>
+                        {isAuth() ? (
+                            <AccountCircle
+                                sx={{ color: "black" }}
+                            ></AccountCircle>
+                        ) : (
+                            <LoginIcon sx={{ color: "black" }}></LoginIcon>
+                        )}
                     </IconButton>
+
+                    {auth && isAuth() && (
+                        <IconButton
+                            sx={{ paddingLeft: "10px" }}
+                            onClick={() => {
+                                signOut();
+                                setAuth(false);
+                            }}
+                        >
+                            <LogoutIcon sx={{ color: "black" }}></LogoutIcon>
+                        </IconButton>
+                    )}
                 </Toolbar>
             </AppBar>
         </Box>

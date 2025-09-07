@@ -12,14 +12,14 @@ export default function login({ mail, password, navigate, setError }) {
     })
         .then((resp) => {
             if (!resp.ok) {
-                setError("*Неправильная почта или пароль!")
+                setError("*Неправильная почта или пароль!");
             }
             console.log(resp);
             return resp.json();
         })
         .then((data) => {
             document.cookie = `auth=${data["status"]}`;
-            navigate('/');
+            navigate("/");
         });
 }
 
@@ -40,7 +40,7 @@ export function signUp({
     })
         .then((resp) => {
             if (!resp.ok) {
-                setError("*Эта почта уже используется!");
+                setError("*Неправильная почта или пароль!");
                 setIsLoading(false);
                 return;
             }

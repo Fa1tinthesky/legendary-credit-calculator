@@ -1,7 +1,7 @@
 .container {
     max-width: 1200px;
     background-color: rgba(255, 255, 255, 0.5);
-    border-radius: "16px" !important;
+    border-radius: 16px !important;
 }
 
 .flexbox {

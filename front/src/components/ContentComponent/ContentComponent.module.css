@@ -26,3 +26,9 @@
 .table_section>div {
     width: 100%;
 }
+.buttons {
+    margin-left: 20px;
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}

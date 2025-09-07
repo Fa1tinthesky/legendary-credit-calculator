@@ -1,4 +1,10 @@
-export default function getData({ setData, setIsLoading, setShowTable, body }) {
+export default function getData({
+    setData,
+    setIsLoading,
+    setShowTable,
+    body,
+    setDataS,
+}) {
     setIsLoading(true);
     setShowTable(true);
 
@@ -15,8 +21,10 @@ export default function getData({ setData, setIsLoading, setShowTable, body }) {
             return resp.json();
         })
         .then((response) => {
-            console.log(response);
-            
+            // console.log(response);
+
+            setDataS(response);
+
             let newResponse = {
                 ...response,
                 table: response.table.map((item) => {

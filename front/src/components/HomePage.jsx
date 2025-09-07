@@ -111,6 +111,7 @@ export default function HomePage() {
     const [showTable, setShowTable] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState({});
+    const [dataS, setDataS] = useState({});
     const [body, setBody] = useState({ currency: 1, type: 1 });
     const [resultBody, setResultBody] = useState(body);
     const [multiplier, setMultiplier] = useState(1);
@@ -152,14 +153,14 @@ export default function HomePage() {
             setCurrency(chosen_currencie);
 
             console.log(body);
-            getData({ setData, setIsLoading, setShowTable, body });
+            getData({ setData, setIsLoading, setShowTable, body, setDataS });
         }
     };
 
     return (
         <>
             <main>
-                <MenuAppBar text="Посчитайте Свои Кредитные Платежи"></MenuAppBar>
+                <MenuAppBar></MenuAppBar>
                 <ThemeProvider theme={theme}>
                     <Container
                         className="container"
@@ -325,7 +326,7 @@ export default function HomePage() {
                                     size="large"
                                     variant="contained"
                                     color="blue"
-                                    sx={{ margin: 1, borderRadius: 0 }}
+                                    sx={{ margin: 1, borderRadius: "12px" }}
                                     onClick={calcHandle}
                                 >
                                     Рассчитать
@@ -335,6 +336,7 @@ export default function HomePage() {
                     </Container>
                     {showTable && (
                         <ContentComponent
+                            sData={dataS}
                             data={data}
                             currency={currency}
                             isLoading={isLoading}

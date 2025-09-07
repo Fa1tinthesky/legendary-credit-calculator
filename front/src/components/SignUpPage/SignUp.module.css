@@ -1,0 +1,236 @@
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.confirm_card {
+    /* position: relative; */
+    /* width: 360px; */
+    /* height: 520px; */
+    /* margin: 30px; */
+    /* height: 200px;
+    width: 200px; */
+    box-shadow: 20px 20px 50px rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    justify-content: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 1;
+    padding: 20px;
+}
+.confirm_card > .input {
+    margin: 0;
+}
+.confirm_card > h2 {
+    font-size: 20px;
+    font-weight: 500;
+}
+.confirm_card > .confirm_error {
+    transform: none;
+    color: #f00;
+}
+
+.card {
+    position: relative;
+    width: 360px;
+    height: 520px;
+    margin: 30px;
+    box-shadow: 20px 20px 50px rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 1;
+}
+.login_heading {
+    color: black;
+    /* transform: translateY(-30px); */
+    margin-bottom: 350px;
+    position: absolute;
+}
+.input_wrapper {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    /* transform: translateY(-20px); */
+    margin-bottom: 50px;
+}
+.input {
+    transition: 0.3s;
+    margin-top: 25px;
+    padding: 10px;
+    width: 230px;
+    border: none;
+    box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 1;
+    color: black;
+}
+.input::placeholder {
+    color: black;
+    opacity: 0.5;
+}
+.input:focus {
+    outline: none;
+}
+.input:hover {
+    transform: scale(1.1);
+}
+
+.container_button {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    position: absolute;
+    margin-top: 180px;
+}
+
+.btn {
+    transform: translateY(70px);
+    position: relative;
+    display: inline-block;
+    border: none;
+    border-radius: 50px;
+    background: none;
+    padding: 25px 75px;
+    margin: 30px;
+}
+
+.btn a {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    color: #000;
+    z-index: 1;
+    font-weight: 400;
+    letter-spacing: 1px;
+    text-decoration: none;
+    overflow: hidden;
+    text-transform: uppercase;
+    transition: all 0.3s ease-in-out;
+    backdrop-filter: blur(15px);
+}
+
+.btn:hover a {
+    letter-spacing: 3px;
+}
+
+.btn a::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        to left,
+        rgba(255, 255, 255, 0.15),
+        transparent
+    );
+    transform: skewX(40deg) translateX(0);
+    transition: all 0.5s ease-out;
+}
+
+.btn:hover a::before {
+    transform: skewX(40deg) translateX(200%);
+}
+
+.btn::before,
+.btn::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 0px;
+    border-radius: 10px;
+    background: #f00;
+    transition: all 0.4s ease-in-out;
+    transition-delay: 0s;
+}
+
+.btn::before {
+    bottom: -5px;
+}
+
+.btn::after {
+    top: -5px;
+}
+
+.btn:hover::before,
+.btn:hover::after {
+    height: 50%;
+    width: 80%;
+    border-radius: 30px;
+    transition-delay: 0.3s;
+}
+
+.btn:hover::before {
+    bottom: 0;
+}
+
+.btn:hover::after {
+    top: 0;
+}
+
+.btn:nth-child(1)::before,
+.btn:nth-child(1)::after {
+    background: #ff7979;
+    box-shadow: 0 0 5px #ff7979, 0 0 15px #ff7979, 0 0 30px #ff7979,
+        0 0 60px #ff7979;
+}
+
+.login {
+    transform: translateY(60px);
+    position: relative;
+    z-index: 100;
+}
+.login a {
+    text-decoration: none;
+    color: black;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    font-size: 15px;
+    transition: 0.2s;
+}
+.login a:hover {
+    border-color: black;
+}
+
+.error {
+    transform: translateY(20px);
+    z-index: 100;
+    color: #f00;
+    font-size: 14px;
+    position: absolute;
+    top: 340px;
+}

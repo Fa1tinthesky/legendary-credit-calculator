@@ -37,5 +37,5 @@ func (s *Server) Run() {
 	r.POST("/api/create-calc", dashboard.Create_calc_handler)
 	r.POST("/api/get-calc", dashboard.Get_calc_handler)
 
-	r.Logger.Fatal(r.Start("10.192.9.206:8080"))
+	r.Logger.Fatal(r.Start("0.0.0.0:8080"))
 }

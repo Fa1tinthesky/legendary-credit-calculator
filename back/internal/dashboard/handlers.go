@@ -35,6 +35,7 @@ func Create_calc_handler(c echo.Context) error {
 func Get_calc_handler(c echo.Context) error {
 	var request Get_cookie
 	err := json.NewDecoder(c.Request().Body).Decode(&request)
+	fmt.Println(request)
 	if err != nil {
 		http.Error(c.Response(), "Неправильный формат", http.StatusBadRequest)
 		return nil
@@ -42,7 +43,9 @@ func Get_calc_handler(c echo.Context) error {
 
 	err, response := Get_calc(request.Cookie)
 	if err != nil {
-		http.Error(c.Response(), "Ошибка сервера", http.StatusInternalServerError)
+		fmt.Println(request.Cookie)
+		fmt.Println(err.Error(), response, request.Cookie)
+		http.Error(c.Response(), err.Error(), http.StatusInternalServerError)
 		return nil
 	}
 	sort.Slice(response, func(i, j int) bool {

@@ -83,7 +83,7 @@ func Connect_to_db() (*pgxpool.Pool, error) {
 		log.Fatal(err)
 	}
 
-	_, _ = pool.Exec(ctx, `
+	_, err = pool.Exec(ctx, `
 		CREATE TABLE IF NOT EXISTS table_unit(
 			id SERIAL PRIMARY KEY,
 			email TEXT NOT NULL,
@@ -100,6 +100,26 @@ func Connect_to_db() (*pgxpool.Pool, error) {
 
 		)
 	`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = pool.Exec(ctx, `
+		CREATE TABLE IF NOT EXISTS calcs(
+			id SERIAL PRIMARY KEY,
+			user_id INT NOT NULL,
+			name TEXT NOT NULL,
+			amount FLOAT NOT NULL,
+			currency INT NOT NULL,
+			period INT NOT NULL,
+			rate FLOAT NOT NULL,
+			type INT NOT NULL,
+			start_date DATE NOT NULL,
+		)
+	`)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	return pool, nil
 }

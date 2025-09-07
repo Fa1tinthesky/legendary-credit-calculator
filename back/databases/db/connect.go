@@ -86,10 +86,11 @@ func Connect_to_db() (*pgxpool.Pool, error) {
 		CREATE TABLE IF NOT EXISTS table_unit(
 			id SERIAL PRIMARY KEY,
 			email TEXT NOT NULL,
-			amount FLOAT NOT NULL,
+			body FLOAT NOT NULL,
 			data TIMESTAMP NOT NULL,
 			interest FLOAT NOT NULL,
-			remainder FLOAT NOT NULL
+			remainder FLOAT NOT NULL,
+			payment FLOAT NOT NULL
 		)
 	`)
 

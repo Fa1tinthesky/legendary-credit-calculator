@@ -28,14 +28,12 @@ func Sign_up(db *pgxpool.Pool, request models.Sign_up_request) error {
 	ctx := context.Background()
 	tx, err := db.Begin(ctx)
 	if err != nil {
-		fmt.Println(1)
 		return err
 	}
 
 	var email string
 	err = tx.QueryRow(ctx, `SELECT email FROM users WHERE email = $1`, request.Mail).Scan(&email)
 	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
-		fmt.Println(2)
 		return err
 	}
 
@@ -45,7 +43,6 @@ func Sign_up(db *pgxpool.Pool, request models.Sign_up_request) error {
 
 	n, err := rand.Int(rand.Reader, big.NewInt(900000))
 	if err != nil {
-		fmt.Println(3)
 		return err
 	}
 	code := n.Int64() + 100000
@@ -54,13 +51,11 @@ func Sign_up(db *pgxpool.Pool, request models.Sign_up_request) error {
 	_ = now.Add(10 * time.Minute)
 	_, err = tx.Exec(ctx, `DELETE FROM temp_users WHERE email = $1`, request.Mail)
 	if err != nil {
-		fmt.Println(4)
 		return err
 	}
 	_, err = db.Exec(ctx, `INSERT INTO temp_users (email , email_password , login ,temp_code , finish_time) 
 		VALUES ($1 , $2 , $3 , $4 , $5)`, request.Mail, request.Password, request.Login, code, now)
 	if err != nil {
-		fmt.Println(5)
 		return err
 	}
 	tx.Commit(ctx)
@@ -75,7 +70,6 @@ func Sign_up(db *pgxpool.Pool, request models.Sign_up_request) error {
 	send := gomail.NewDialer("smtp.gmail.com", 587, "app75490@gmail.com", "znvh weto comb wkkd ")
 	err = send.DialAndSend(m)
 	if err != nil {
-		fmt.Println(6)
 		return err
 	}
 	tx.Commit(ctx)
@@ -93,7 +87,6 @@ func Confirm_email(db *pgxpool.Pool, request models.Confirm_email_request) error
 	err = db.QueryRow(ctx, `SELECT id , email , email_password , login , temp_code FROM temp_users WHERE email = $1`, request.Mail).
 		Scan(&temp_user.Id, &temp_user.Email, &temp_user.Email_password, &temp_user.Login, &temp_user.Temp_code)
 	if err != nil {
-		fmt.Println(1)
 		return err
 	}
 
@@ -103,7 +96,6 @@ func Confirm_email(db *pgxpool.Pool, request models.Confirm_email_request) error
 	_, err = tx.Exec(ctx, `INSERT INTO users(email , password , login) VALUES($1 , $2 , $3)`,
 		temp_user.Email, temp_user.Email_password, temp_user.Login)
 	if err != nil {
-		fmt.Println(2)
 		return err
 	}
 	tx.Commit(ctx)

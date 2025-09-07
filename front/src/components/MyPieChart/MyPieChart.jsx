@@ -43,7 +43,7 @@ export default function MyPieChart({ percentage }) {
     useEffect(() => {
         setTimeout(() => {
             setIsFirstTime(false);
-        }, animationDuration + 300)
+        }, animationDuration + 500)
     }, []);
 
     return (

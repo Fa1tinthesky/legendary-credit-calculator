@@ -11,6 +11,20 @@ import Paper from "@mui/material/Paper";
 import numberWithCommas from "../../functions/numberWithCommas";
 
 export default function TableComponent({ table, currency }) {
+    let sum = 0;
+    let debtSum = 0;
+    let percentSum = 0;
+
+    for (let index = 0; index < table.length; index++) {
+        sum += table[index].payment;
+        debtSum += table[index].body;
+        percentSum += table[index].interest;
+    }
+
+    sum = Math.round(sum);
+    debtSum = Math.round(debtSum);
+    percentSum = Math.round(percentSum);
+
     const headerStyle = {
         fontWeight: "bold",
         color: "black",
@@ -76,6 +90,18 @@ export default function TableComponent({ table, currency }) {
                             </TableCell>
                         </TableRow>
                     ))}
+                    <TableRow>
+                        <TableCell sx={headerStyle}>Итоги:</TableCell>
+                        <TableCell sx={headerStyle} align="right">
+                            {numberWithCommas(sum, currency)}
+                        </TableCell>
+                        <TableCell sx={headerStyle} align="right">
+                            {numberWithCommas(debtSum, currency)}
+                        </TableCell>
+                        <TableCell sx={headerStyle} align="right">
+                            {numberWithCommas(percentSum, currency)}
+                        </TableCell>
+                    </TableRow>
                 </TableBody>
             </Table>
         </TableContainer>

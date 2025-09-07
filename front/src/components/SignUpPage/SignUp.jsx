@@ -95,68 +95,72 @@ export default function SignUpPage() {
     }
 
     return (
-        <main className={classes.main}>
-            <div className={classes.card}>
-                <h1 className={classes.login_heading}>Регистрация</h1>
-                <div className={classes.input_wrapper}>
-                    <input
-                        ref={mailRef}
-                        className={classes.input}
-                        type="text"
-                        placeholder="Email"
-                    />
-                    <input
-                        ref={nameRef}
-                        className={classes.input}
-                        type="text"
-                        placeholder="Your Name"
-                    />
-                    <input
-                        onChange={() => {
-                            setError("");
-                        }}
-                        ref={passwordRef}
-                        className={classes.input}
-                        type="password"
-                        placeholder="Password"
-                    />
-                    <input
-                        onChange={() => {
-                            setError("");
-                        }}
-                        ref={confirmPasswordRef}
-                        className={classes.input}
-                        type="password"
-                        placeholder="Confirm Password"
-                    />
-                </div>
+        <>
+            <MenuAppBar></MenuAppBar>
+            <main className={classes.main}>
+                <div className={classes.card}>
+                    <h1 className={classes.login_heading}>Регистрация</h1>
+                    <div className={classes.input_wrapper}>
+                        <input
+                            ref={mailRef}
+                            className={classes.input}
+                            type="text"
+                            placeholder="Email"
+                        />
+                        <input
+                            ref={nameRef}
+                            className={classes.input}
+                            type="text"
+                            placeholder="Your Name"
+                        />
+                        <input
+                            onChange={() => {
+                                setError("");
+                            }}
+                            ref={passwordRef}
+                            className={classes.input}
+                            type="password"
+                            placeholder="Password"
+                        />
+                        <input
+                            onChange={() => {
+                                setError("");
+                            }}
+                            ref={confirmPasswordRef}
+                            className={classes.input}
+                            type="password"
+                            placeholder="Confirm Password"
+                        />
+                    </div>
 
-                <div className={classes.error}>{error}</div>
+                    <div className={classes.error}>{error}</div>
 
-                <div className={classes.login}>
-                    У вас уже есть аккаунт? <Link to={"/login"}>Войти!</Link>
-                </div>
+                    <div className={classes.login}>
+                        У вас уже есть аккаунт?{" "}
+                        <Link to={"/login"}>Войти!</Link>
+                    </div>
 
-                <div className={classes.container_button}>
-                    <button
-                        onClick={() => {
-                            signUpHandle();
-                        }}
-                        className={classes.btn}
-                    >
-                        <a href="#">Регистрация</a>
-                    </button>
+                    <div className={classes.container_button}>
+                        <button
+                            onClick={() => {
+                                signUpHandle();
+                            }}
+                            className={classes.btn}
+                        >
+                            <a href="#">Регистрация</a>
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <Backdrop
-                sx={(theme) => ({
-                    color: "#fff",
-                    zIndex: theme.zIndex.drawer + 1,
-                })}
-                open={isLoading}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop>
-        </main>
+                <Backdrop
+                    sx={(theme) => ({
+                        color: "#fff",
+                        zIndex: theme.zIndex.drawer + 1,
+                    })}
+                    open={isLoading}
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+            </main>
+        </>
     );
 }

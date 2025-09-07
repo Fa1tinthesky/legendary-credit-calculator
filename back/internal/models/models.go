@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/Fa1tinthesky/legendary-credit-calculator/backend/internal/calculation/entities"
+)
 
 type Sign_up_request struct {
 	Mail     string `json:"mail"`
@@ -49,4 +53,13 @@ type CalculationTable struct {
 	Rate        float64   `json:"rate" db:"rate"`
 	PaymentType string    `json:"payment_type" db:"payment_type"`
 	StartDate   time.Time `json:"start_date" db:"start_date"`
+}
+
+type Create_calc_model struct {
+	Rows   []entities.PaymentSchedule `json:"rows"`
+	Cookie string                     `json:"cookies"`
+}
+
+type Get_calc_model struct {
+	Object entities.PaymentSchedule `json:"object"`
 }

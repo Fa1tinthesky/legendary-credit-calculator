@@ -88,7 +88,9 @@ func Connect_to_db() (*pgxpool.Pool, error) {
 			id SERIAL PRIMARY KEY,
 			email TEXT NOT NULL,
 			amount FLOAT NOT NULL,
-			data TIMESTAMP NOT NULL
+			data TIMESTAMP NOT NULL,
+			interest FLOAT NOT NULL,
+			remainder FLOAT NOT NULL
 		)
 	`)
 

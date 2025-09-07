@@ -2,7 +2,13 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import "./HomePage.css";
+import constants from "./constants/constants";
+import MenuAppBar from "./MenuAppBar";
 
+
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "./constants/theme";
 import ContentComponent from "./ContentComponent/ContentComponent";
 import getData from "../functions/getData";
 import Stack from "@mui/material/Stack";
@@ -20,29 +26,7 @@ import {
     Box,
     Grid,
 } from "@mui/material";
-import {
-    createTheme,
-    alpha,
-    getContrastRatio,
-    ThemeProvider,
-} from "@mui/material/styles";
 import { useReducer, useState, useRef } from "react";
-import MenuAppBar from "./MenuAppBar";
-import { isAuth } from "../functions/auth";
-
-const blueBase = "#000000";
-const blueMain = alpha(blueBase, 0.7);
-const theme = createTheme({
-    palette: {
-        blue: {
-            main: blueMain,
-            light: alpha(blueBase, 0.5),
-            dark: alpha(blueBase, 0.9),
-            contrastText:
-                getContrastRatio(blueMain, "#fff") > 4.5 ? "#fff" : "#111",
-        },
-    },
-});
 
 function FormOption({
     defaultValue,
@@ -117,155 +101,23 @@ function FormOption({
 }
 
 export default function HomePage() {
-    const time_terms = [
-        {
-            value: "месяц",
-            label: "мес.",
-        },
-        {
-            value: "год",
-            label: "год",
-        },
-    ];
-    const money_terms = [
-        {
-            value: "% в месяц",
-            label: "% в месяц",
-        },
-        /* {
-            value: "% в год",
-            label: "% в год",
-        }, */
-    ];
-
-    const currencies = [
-        {
-            value: "USD",
-            label: "$",
-        },
-        {
-            value: "TJS",
-            label: "с.",
-        },
-    ];
-
-    const debt_types = [
-        {
-            value: "Аннуитетный",
-            label: "Аннуитетный",
-        },
-        {
-            value: "Дифференцированный",
-            label: "Дифференцированный",
-        },
-    ];
-
-    const testData = {
-        table: [
-            {
-                date: "2025-09-03T00:00:00Z",
-                payment: 8884.88,
-                body: 7884.88,
-                interest: 1000,
-                remainder: 92115.12,
-            },
-            {
-                date: "2025-10-03T00:00:00Z",
-                payment: 8884.88,
-                body: 7963.73,
-                interest: 921.15,
-                remainder: 84151.39,
-            },
-            {
-                date: "2025-11-03T00:00:00Z",
-                payment: 8884.88,
-                body: 8043.36,
-                interest: 841.51,
-                remainder: 76108.03,
-            },
-            {
-                date: "2025-12-03T00:00:00Z",
-                payment: 8884.88,
-                body: 8123.8,
-                interest: 761.08,
-                remainder: 67984.23,
-            },
-            {
-                date: "2026-01-03T00:00:00Z",
-                payment: 8884.88,
-                body: 8205.04,
-                interest: 679.84,
-                remainder: 59779.19,
-            },
-            {
-                date: "2026-02-03T00:00:00Z",
-                payment: 8884.88,
-                body: 8287.09,
-                interest: 597.79,
-                remainder: 51492.11,
-            },
-            {
-                date: "2026-03-03T00:00:00Z",
-                payment: 8884.88,
-                body: 8369.96,
-                interest: 514.92,
-                remainder: 43122.15,
-            },
-            {
-                date: "2026-04-03T00:00:00Z",
-                payment: 8884.88,
-                body: 8453.66,
-                interest: 431.22,
-                remainder: 34668.49,
-            },
-            {
-                date: "2026-05-03T00:00:00Z",
-                payment: 8884.88,
-                body: 8538.19,
-                interest: 346.68,
-                remainder: 26130.3,
-            },
-            {
-                date: "2026-06-03T00:00:00Z",
-                payment: 8884.88,
-                body: 8623.58,
-                interest: 261.3,
-                remainder: 17506.72,
-            },
-            {
-                date: "2026-07-03T00:00:00Z",
-                payment: 8884.88,
-                body: 8709.81,
-                interest: 175.07,
-                remainder: 8796.91,
-            },
-            {
-                date: "2026-08-03T00:00:00Z",
-                payment: 8884.88,
-                body: 8796.91,
-                interest: 87.97,
-                remainder: 0,
-            },
-        ],
-        monthly: 8884.88,
-        sum: 106618.55,
-    };
-
+    const {time_terms, money_terms, currencies, debt_types} = constants
+        
     const [isSumError, setIsSumError] = useState(false);
     const [isPeriodError, setIsPeriodError] = useState(false);
     const [isRateError, setIsRateError] = useState(false);
-    const [chosen_currencie, set_chosen_currencie] = useState(
-        currencies[1].label
-    );
+    const [chosen_currencie, set_chosen_currencie] = useState(currencies[1].label);
 
-    console.log(isAuth());
+    const hostServer = `http://${import.meta.env.VITE_HOSTIP}:8080;
 
     const [showTable, setShowTable] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState({});
     const [body, setBody] = useState({ currency: 1, type: 1 });
+    const [resultBody, setResultBody] = useState(body);
     const [multiplier, setMultiplier] = useState(1);
     const [currency, setCurrency] = useState(currencies[1].label);
+    const [dwnLink, setDwnLink] = useState("");
     const periodRef = useRef();
 
     function changeBody(key, value) {
@@ -283,6 +135,11 @@ export default function HomePage() {
         set_chosen_currencie(chosen ? chosen[0].label : "TJS");
     };
 
+    const exportHandler = (e) => {
+        e.preventDefault();
+
+    }
+
     const calcHandle = () => {
         if (!body.sum) {
             setIsSumError(true);
@@ -295,16 +152,10 @@ export default function HomePage() {
         }
 
         if (body.sum && body.period && body.rate) {
+            setResultBody(body);
             setCurrency(chosen_currencie);
 
-            // setIsLoading(true);
-            // setShowTable(true);
-
-            // setTimeout(() => {
-            //     setData(testData);
-            //     setIsLoading(false);
-            // }, 1000);
-
+            console.log(body);
             getData({ setData, setIsLoading, setShowTable, body });
         }
     };
@@ -312,26 +163,18 @@ export default function HomePage() {
     return (
         <>
             <main>
-                <MenuAppBar></MenuAppBar>
+                <MenuAppBar text="Посчитайте Свои Кредитные Платежи"></MenuAppBar>
                 <ThemeProvider theme={theme}>
                     <Container
+                        className="container"
                         sx={{
-                            flexGrow: 0,
                             marginTop: 3,
-                            maxWidth: "1200px",
-                            backgroundColor: "rgba(255, 255, 255, 0.5)",
-                            padding: "20px",
-                            borderRadius: "16px",
+                            padding: "20px"
                         }}
                     >
                         <Grid container spacing={2}>
                             <Grid size={6}>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                    }}
-                                >
+                                <Box className="flexbox">
                                     <FormControl
                                         color="blue"
                                         sx={{ width: 0.78 }}
@@ -492,14 +335,16 @@ export default function HomePage() {
                                     Рассчитать
                                 </Button>
                             </Grid>
-                        </Grid>
+                    </Grid>
                     </Container>
                     {showTable && (
                         <ContentComponent
                             data={data}
                             currency={currency}
                             isLoading={isLoading}
-                        ></ContentComponent>
+                            body={resultBody}
+                        >
+                        </ContentComponent>
                     )}
                 </ThemeProvider>
             </main>

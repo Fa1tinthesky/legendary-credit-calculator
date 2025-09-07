@@ -6,7 +6,7 @@
 }
 
 main {
-    background-image: url('./assets/white-bg-image.png');
+    background-image: url('../assets/white-bg-image.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     min-height: 100vh;
@@ -20,13 +20,3 @@ main {
     -webkit-backdrop-filter: blur(10px) !important;
 }
 
-.focus_input:focus, 
-.focus_input:focus-within, 
-.focus_input:focus-visible {
-    outline-color: black !important;
-}
-
-a {
-    text-decoration: none;
-    color: white;
-}

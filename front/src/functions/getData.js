@@ -2,13 +2,16 @@ export default function getData({ setData, setIsLoading, setShowTable, body }) {
     setIsLoading(true);
     setShowTable(true);
 
-    fetch("http://10.192.9.134:8080/api/calculate", {
+    const host = `http://${import.meta.env.VITE_HOSTIP}:8080/api/calculate`;
+    fetch(host, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
     })
         .then((resp) => {
-            console.log(resp, body);
+            if (!resp.ok) {
+                throw Error("SERVER DID NOT RESPONES WITH FILE");
+            }
             return resp.json();
         })
         .then((response) => {
